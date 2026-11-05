@@ -13,5 +13,6 @@ Dimensions and colours are constants at the top of the generator (`GRID_W_MM`, `
 `PITCH_MM`, `LINE_MM`, `HOLD_MM`, `DPI`, `PAPER`, `INK`).
 
 Line centrelines sit on every 20 mm multiple of the grid area (25, 45, … 285 mm), so the pitch
-is exact. The 25 mm margin means no stroke is clipped any more: every line is a full 1 mm, and
-the outer stroke reaches 0.5 mm past the nominal 260 × 200 mm (261 × 201 mm of ink).
+is exact. Strokes are clipped to the grid rectangle — the 25 mm hold margin is plain background.
+Vertical strokes run 201 mm and horizontal strokes 261 mm (0.5 mm past the nominal grid area on
+each side) so the outer border closes square at full 1 mm width.
