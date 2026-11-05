@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="260mm" height="200mm" viewBox="0 0 260 200">
+<rect width="260" height="200" fill="#fff"/>
+<g fill="#000">
+<rect x="0" y="0" width="0.5" height="200"/>
+<rect x="19.5" y="0" width="1" height="200"/>
+<rect x="39.5" y="0" width="1" height="200"/>
+<rect x="59.5" y="0" width="1" height="200"/>
+<rect x="79.5" y="0" width="1" height="200"/>
+<rect x="99.5" y="0" width="1" height="200"/>
+<rect x="119.5" y="0" width="1" height="200"/>
+<rect x="139.5" y="0" width="1" height="200"/>
+<rect x="159.5" y="0" width="1" height="200"/>
+<rect x="179.5" y="0" width="1" height="200"/>
+<rect x="199.5" y="0" width="1" height="200"/>
+<rect x="219.5" y="0" width="1" height="200"/>
+<rect x="239.5" y="0" width="1" height="200"/>
+<rect x="259.5" y="0" width="0.5" height="200"/>
+<rect x="0" y="0" width="260" height="0.5"/>
+<rect x="0" y="19.5" width="260" height="1"/>
+<rect x="0" y="39.5" width="260" height="1"/>
+<rect x="0" y="59.5" width="260" height="1"/>
+<rect x="0" y="79.5" width="260" height="1"/>
+<rect x="0" y="99.5" width="260" height="1"/>
+<rect x="0" y="119.5" width="260" height="1"/>
+<rect x="0" y="139.5" width="260" height="1"/>
+<rect x="0" y="159.5" width="260" height="1"/>
+<rect x="0" y="179.5" width="260" height="1"/>
+<rect x="0" y="199.5" width="260" height="0.5"/>
+</g></svg>
