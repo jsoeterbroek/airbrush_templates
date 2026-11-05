@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Airbrush holding grid: 260 x 200 mm grid area, 20 mm pitch, 1 mm lines,
-white on black, surrounded by HOLD_MM of plain margin on all four sides.
+white on a black field, surrounded by HOLD_MM of plain white margin on all
+four sides.
 
 Line centrelines sit on every 20 mm multiple of the grid area, so cell pitch is
 exactly 20 mm. The margin is plain background: grid lines are clipped to the
@@ -28,7 +29,8 @@ LINE_MM = 1.0
 HOLD_MM = 25.0
 DPI = 600
 
-PAPER = (0, 0, 0)  # background
+MARGIN = (255, 255, 255)  # hold margin, outside the grid rectangle
+FIELD = (0, 0, 0)  # grid area background, under the lines
 INK = (255, 255, 255)  # grid lines
 
 HERE = Path(__file__).resolve().parent
@@ -37,8 +39,8 @@ HEIGHT_MM = GRID_H_MM + 2 * HOLD_MM
 NAME = f"grid_{GRID_W_MM:g}x{GRID_H_MM:g}_{PITCH_MM:g}mm_hold{HOLD_MM:g}mm"
 HALF = LINE_MM / 2.0
 
-# Inked grid rectangle: nominal grid area grown by half a stroke so the corners
-# close square. Everything outside this box stays background (the hold margin).
+# Grid rectangle: nominal grid area grown by half a stroke so the corners close
+# square. Inside it is FIELD, outside is MARGIN, strokes are INK.
 INK_X0, INK_X1 = HOLD_MM - HALF, HOLD_MM + GRID_W_MM + HALF
 INK_Y0, INK_Y1 = HOLD_MM - HALF, HOLD_MM + GRID_H_MM + HALF
 
@@ -65,14 +67,20 @@ def coverage(centres: list[float], n_px: int, s: float) -> np.ndarray:
 def render_png() -> None:
     s = DPI / 25.4
     w, h = round(WIDTH_MM * s), round(HEIGHT_MM * s)
-    v = coverage(centre_lines(GRID_W_MM), w, s).astype(np.float32)  # per column
-    hz = coverage(centre_lines(GRID_H_MM), h, s).astype(np.float32)  # per row
-    # Each stroke is bounded by the grid rectangle, so the hold margin stays plain.
+    vcol = coverage(centre_lines(GRID_W_MM), w, s).astype(np.float32)  # per column
+    hrow = coverage(centre_lines(GRID_H_MM), h, s).astype(np.float32)  # per row
+    # Strokes are bounded by the grid rectangle, so the hold margin stays plain.
     xext = band_coverage(INK_X0, INK_X1, w, s).astype(np.float32)
     yext = band_coverage(INK_Y0, INK_Y1, h, s).astype(np.float32)
-    alpha = np.outer(yext, v)
-    np.maximum(alpha, np.outer(hz, xext), out=alpha)  # union of both stroke sets
-    grey = np.rint(np.float32(PAPER[0]) + np.float32(INK[0] - PAPER[0]) * alpha)
+
+    ink = np.outer(yext, vcol)  # vertical strokes, bounded in y
+    np.maximum(ink, np.outer(hrow, xext), out=ink)  # + horizontal strokes, bounded in x
+
+    field = np.outer(yext, xext)  # grid rectangle
+    field -= ink  # rectangle minus strokes: the visible FIELD area
+    np.clip(field, 0.0, 1.0, out=field)
+
+    grey = np.rint(np.float32(MARGIN[0]) + np.float32(FIELD[0] - MARGIN[0]) * field)
     img = Image.fromarray(grey.astype(np.uint8)).convert("RGB")
     out = HERE / f"{NAME}.png"
     img.save(out, dpi=(DPI, DPI))
@@ -99,7 +107,11 @@ def render_svg() -> None:
                 f'width="{WIDTH_MM:g}mm" height="{HEIGHT_MM:g}mm" '
                 f'viewBox="0 0 {WIDTH_MM:g} {HEIGHT_MM:g}">'
             ),
-            f'<rect width="{WIDTH_MM:g}" height="{HEIGHT_MM:g}" fill="#000"/>',
+            f'<rect width="{WIDTH_MM:g}" height="{HEIGHT_MM:g}" fill="#fff"/>',
+            (
+                f'<rect x="{INK_X0:g}" y="{INK_Y0:g}" '
+                f'width="{INK_X1 - INK_X0:g}" height="{INK_Y1 - INK_Y0:g}" fill="#000"/>'
+            ),
             f'<g fill="#fff">',
             *rects,
             "</g></svg>",

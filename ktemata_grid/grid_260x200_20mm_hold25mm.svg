@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="310mm" height="250mm" viewBox="0 0 310 250">
-<rect width="310" height="250" fill="#000"/>
+<rect width="310" height="250" fill="#fff"/>
+<rect x="24.5" y="24.5" width="261" height="201" fill="#000"/>
 <g fill="#fff">
 <rect x="24.5" y="24.5" width="1" height="201"/>
 <rect x="44.5" y="24.5" width="1" height="201"/>
